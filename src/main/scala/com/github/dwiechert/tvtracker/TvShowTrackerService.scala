@@ -26,7 +26,7 @@ trait TvShowTrackerService extends HttpService {
   dbHelper.insertShow()
 
   import spray.json._
-  import com.github.dwiechert.tvtracker.ShowProtocol._
+  import com.github.dwiechert.tvtracker.TvShowTrackerProtocols._
 
   val route: Route = {
     (path("show") & get) {
@@ -39,6 +39,17 @@ trait TvShowTrackerService extends HttpService {
             }
         }
       }
-    } 
+    } ~
+    (path("seasons") & get) {
+      respondWithMediaType(`application/json`) {
+        parameter("showName") {
+          showName =>
+            complete {
+              val seasons = dbHelper.getSeasons(showName)
+              seasons.toJson.toString()
+            }
+        }
+      }
+    }
   }
 }

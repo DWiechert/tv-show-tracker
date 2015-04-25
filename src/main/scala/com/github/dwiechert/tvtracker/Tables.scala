@@ -48,8 +48,8 @@ class Seasons(tag: Tag) extends Table[Season](tag, "SEASONS") {
   def show = foreignKey("SHOW_FK", showName, TableQuery[Shows])(_.name)
 }
 
-object ShowProtocol extends DefaultJsonProtocol {
-//  implicit val userFormat = jsonFormat2(User)
+object TvShowTrackerProtocols extends DefaultJsonProtocol {
+  implicit val userFormat = jsonFormat2(User)
   implicit val showFormat = jsonFormat1(Show)
-//  implicit val seasonFormat = jsonFormat3(Season)
+  implicit val seasonFormat = jsonFormat3(Season)
 }

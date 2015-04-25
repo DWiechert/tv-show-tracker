@@ -59,6 +59,15 @@ class DatabaseHelper(val user: String, val password: String) {
       } yield (s)).list.head
     }
   }
+  
+  def getSeasons(showName: String): List[Season] = {
+    db.withTransaction { implicit session =>
+      (for {
+        s <- seasons
+        if (s.showName === showName)
+      } yield(s)).list 
+    }
+  }
 
   def insertSeason() = {
     db.withTransaction { implicit session =>
