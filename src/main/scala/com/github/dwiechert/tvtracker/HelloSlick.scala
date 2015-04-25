@@ -22,6 +22,12 @@ object HelloSlick extends App {
     users.insert(
       User("Fred Smith")
     )
+
+    val query = for {
+      u <- users
+      if (u.id < 50)
+    } yield (u)
+    query.delete
   }
 
   def createIfNotExists(tables: TableQuery[_ <: Table[_]]*)(implicit session: Session) {
