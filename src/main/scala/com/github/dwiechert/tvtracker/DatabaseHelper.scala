@@ -50,6 +50,15 @@ class DatabaseHelper(val user: String, val password: String) {
       insertIfNotExists(Show("Breaking Bad"))
     }
   }
+  
+  def getShow(name: String): Show = {
+    db.withTransaction { implicit session =>
+      (for {
+        s <- shows
+        if (s.name === name)
+      } yield (s)).list.head
+    }
+  }
 
   def insertSeason() = {
     db.withTransaction { implicit session =>
