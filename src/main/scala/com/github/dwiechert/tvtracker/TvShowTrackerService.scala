@@ -5,6 +5,7 @@ import spray.routing._
 import spray.http._
 import MediaTypes._
 import spray.json._
+import com.github.dwiechert.tvtracker.TvShowTrackerProtocols._
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
@@ -24,32 +25,57 @@ trait TvShowTrackerService extends HttpService {
   val dbHelper = new DatabaseHelper(user = "tv-show-tracker-role", password = "tracker")
 
   dbHelper.insertShow()
-
-  import spray.json._
-  import com.github.dwiechert.tvtracker.TvShowTrackerProtocols._
+  dbHelper.insertSeason()
 
   val route: Route = {
-    (path("show") & get) {
+    (path("shows") & get) {
       respondWithMediaType(`application/json`) {
-        parameter("name") {
-          name =>
-            complete {
-              val show = dbHelper.getShow(name)
-              show.toJson.toString()
-            }
+        complete {
+          val show = dbHelper.getShows
+          show.toJson.toString()
         }
       }
     } ~
-    (path("seasons") & get) {
-      respondWithMediaType(`application/json`) {
-        parameter("showName") {
-          showName =>
-            complete {
-              val seasons = dbHelper.getSeasons(showName)
-              seasons.toJson.toString()
+      (rejectEmptyResponse & path("show") & get) {
+        respondWithMediaType(`application/json`) {
+          parameters("name") {
+            name =>
+              complete {
+                val show = dbHelper.getShow(name)
+                show match {
+                  case Some(Show(_)) => show.toJson.toString()
+                  case None          => StatusCodes.NotFound
+                }
+              }
+          }
+        }
+      } ~
+      (path("seasons") & get) {
+        respondWithMediaType(`application/json`) {
+          parameters("showName") {
+            showName =>
+              complete {
+                val seasons = dbHelper.getSeasons(showName)
+                seasons.toJson.toString()
+              }
+          }
+        }
+      } ~
+      rejectEmptyResponse {
+        (path("season") & get) {
+          respondWithMediaType(`application/json`) {
+            parameters("showName", "number".as[Int]) {
+              (showName, number) =>
+                complete {
+                  val season = dbHelper.getSeason(showName, number)
+                  season match {
+                    case Some(Season(_, _, _)) => season.toJson.toString()
+                    case None                  => StatusCodes.NotFound
+                  }
+                }
             }
+          }
         }
       }
-    }
   }
 }

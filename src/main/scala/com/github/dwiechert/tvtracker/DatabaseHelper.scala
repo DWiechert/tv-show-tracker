@@ -50,22 +50,41 @@ class DatabaseHelper(val user: String, val password: String) {
       insertIfNotExists(Show("Breaking Bad"))
     }
   }
-  
-  def getShow(name: String): Show = {
+
+  def getShows(): List[Show] = {
     db.withTransaction { implicit session =>
       (for {
         s <- shows
-        if (s.name === name)
-      } yield (s)).list.head
+      } yield (s)).list
     }
   }
-  
+
+  def getShow(name: String): Option[Show] = {
+    db.withTransaction { implicit session =>
+      val foundShows = (for {
+        s <- shows
+        if (s.name === name)
+      } yield (s)).list
+      if (foundShows.isEmpty) None else Some(foundShows.head)
+    }
+  }
+
   def getSeasons(showName: String): List[Season] = {
     db.withTransaction { implicit session =>
       (for {
         s <- seasons
         if (s.showName === showName)
-      } yield(s)).list 
+      } yield (s)).list
+    }
+  }
+
+  def getSeason(showName: String, number: Int): Option[Season] = {
+    db.withTransaction { implicit session =>
+      val foundSeasons = (for {
+        s <- seasons
+        if (s.showName === showName && s.number === number)
+      } yield (s)).list
+      if (foundSeasons.isEmpty) None else Some(foundSeasons.head)
     }
   }
 
