@@ -36,7 +36,7 @@ trait TvShowTrackerService extends HttpService {
         }
       }
     } ~
-      (rejectEmptyResponse & path("show") & get) {
+      (path("show") & get) {
         respondWithMediaType(`application/json`) {
           parameters("name") {
             name =>
@@ -61,19 +61,17 @@ trait TvShowTrackerService extends HttpService {
           }
         }
       } ~
-      rejectEmptyResponse {
-        (path("season") & get) {
-          respondWithMediaType(`application/json`) {
-            parameters("showName", "number".as[Int]) {
-              (showName, number) =>
-                complete {
-                  val season = dbHelper.getSeason(showName, number)
-                  season match {
-                    case Some(Season(_, _, _)) => season.toJson.toString()
-                    case None                  => StatusCodes.NotFound
-                  }
+      (path("season") & get) {
+        respondWithMediaType(`application/json`) {
+          parameters("showName", "number".as[Int]) {
+            (showName, number) =>
+              complete {
+                val season = dbHelper.getSeason(showName, number)
+                season match {
+                  case Some(Season(_, _, _)) => season.toJson.toString()
+                  case None                  => StatusCodes.NotFound
                 }
-            }
+              }
           }
         }
       }
