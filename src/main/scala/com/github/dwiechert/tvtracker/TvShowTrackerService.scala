@@ -74,6 +74,13 @@ trait TvShowTrackerService extends HttpService {
               }
           }
         }
+      } ~
+      (path("hello") & get) {
+        respondWithMediaType(`text/html`) {
+          complete {
+            html.hello(new java.util.Date).toString
+          }
+        }
       }
   }
 }
