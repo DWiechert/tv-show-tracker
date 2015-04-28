@@ -1,0 +1,7 @@
+@(shows: List[Show])
+
+<ul>
+@for(show <- shows) {
+  <li>@show.name</li>
+}
+</ul>

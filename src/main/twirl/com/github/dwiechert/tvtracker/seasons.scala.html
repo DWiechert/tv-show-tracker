@@ -1,0 +1,9 @@
+@(showName: String, seasons: List[Season])
+
+<h1>Show: @showName</h1>
+<h2>Seasons</h2>
+<ul>
+@for(season <- seasons) {
+	<li>@season.number</li>
+}
+</ul>

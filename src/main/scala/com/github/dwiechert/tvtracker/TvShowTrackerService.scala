@@ -29,10 +29,10 @@ trait TvShowTrackerService extends HttpService {
 
   val route: Route = {
     (path("shows") & get) {
-      respondWithMediaType(`application/json`) {
+      respondWithMediaType(`text/html`) {
         complete {
-          val show = dbHelper.getShows
-          show.toJson.toString()
+          val shows = dbHelper.getShows
+          html.shows(shows).toString
         }
       }
     } ~
@@ -51,12 +51,12 @@ trait TvShowTrackerService extends HttpService {
         }
       } ~
       (path("seasons") & get) {
-        respondWithMediaType(`application/json`) {
+        respondWithMediaType(`text/html`) {
           parameters("showName") {
             showName =>
               complete {
                 val seasons = dbHelper.getSeasons(showName)
-                seasons.toJson.toString()
+                html.seasons(showName, seasons).toString()
               }
           }
         }
@@ -72,13 +72,6 @@ trait TvShowTrackerService extends HttpService {
                   case None                  => StatusCodes.NotFound
                 }
               }
-          }
-        }
-      } ~
-      (path("hello") & get) {
-        respondWithMediaType(`text/html`) {
-          complete {
-            html.hello(new java.util.Date).toString
           }
         }
       }

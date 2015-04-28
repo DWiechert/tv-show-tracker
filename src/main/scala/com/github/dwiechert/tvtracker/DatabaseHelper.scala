@@ -97,19 +97,16 @@ class DatabaseHelper(val user: String, val password: String) {
     }
   }
 
-  def queryShowsAndSeasons() = {
+  def getShowsAndSeasons(): Map[Show, List[Season]] = {
     db.withTransaction { implicit session =>
       // Pair shows with the seasons
-      val joinQuery = for {
+      val joinedList = (for {
         show <- shows
         season <- seasons
         if (show.name === season.showName)
-      } yield (show, season)
-
-      // Print out all shows and their seasons
-      for {
-        (show, season) <- joinQuery
-      } println(s"Show: $show\tSeason: $season")
+      } yield (show, season)).list
+      
+      joinedList.groupBy(_._1).mapValues(_.map(_._2))
     }
   }
 
