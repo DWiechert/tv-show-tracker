@@ -2,7 +2,6 @@ package com.github.dwiechert.tvtracker
 
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.jdbc.JdbcBackend
-import spray.json.DefaultJsonProtocol
 
 /**
  * Case class to define a User.
@@ -46,10 +45,4 @@ class Seasons(tag: Tag) extends Table[Season](tag, "SEASONS") {
   def * = (number, showName, id.?) <> (Season.tupled, Season.unapply)
 
   def show = foreignKey("SHOW_FK", showName, TableQuery[Shows])(_.name)
-}
-
-object TvShowTrackerProtocols extends DefaultJsonProtocol {
-  implicit val userFormat = jsonFormat2(User)
-  implicit val showFormat = jsonFormat1(Show)
-  implicit val seasonFormat = jsonFormat3(Season)
 }

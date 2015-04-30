@@ -18,7 +18,6 @@ libraryDependencies ++= {
 	"org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
 	"io.spray"            %%  "spray-can"     % sprayV,
 	"io.spray"            %%  "spray-routing" % sprayV,
-	"io.spray" %%  "spray-json" % "1.3.1",
     "com.typesafe.akka"   %%  "akka-actor"    % akkaV
   )
 }

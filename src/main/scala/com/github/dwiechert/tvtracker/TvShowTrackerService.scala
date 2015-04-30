@@ -4,8 +4,6 @@ import akka.actor.Actor
 import spray.routing._
 import spray.http._
 import MediaTypes._
-import spray.json._
-import com.github.dwiechert.tvtracker.TvShowTrackerProtocols._
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
@@ -35,18 +33,26 @@ trait TvShowTrackerService extends HttpService {
           html.shows(shows).toString
         }
       }
+      // TODO: Make this `text/html`
+      //    } ~
+      //      (path("show") & get) {
+      //        respondWithMediaType(`application/json`) {
+      //          parameters("name") {
+      //            name =>
+      //              complete {
+      //                val show = dbHelper.getShow(name)
+      //                show match {
+      //                  case Some(Show(_)) => show.toJson.toString()
+      //                  case None          => StatusCodes.NotFound
+      //                }
+      //              }
+      //          }
+      //        }
     } ~
-      (path("show") & get) {
-        respondWithMediaType(`application/json`) {
-          parameters("name") {
-            name =>
-              complete {
-                val show = dbHelper.getShow(name)
-                show match {
-                  case Some(Show(_)) => show.toJson.toString()
-                  case None          => StatusCodes.NotFound
-                }
-              }
+      (path("searchShows") & get) {
+        respondWithMediaType(`text/html`) {
+          complete {
+            html.searchshows("Search Shows").toString()
           }
         }
       } ~
@@ -60,20 +66,22 @@ trait TvShowTrackerService extends HttpService {
               }
           }
         }
-      } ~
-      (path("season") & get) {
-        respondWithMediaType(`application/json`) {
-          parameters("showName", "number".as[Int]) {
-            (showName, number) =>
-              complete {
-                val season = dbHelper.getSeason(showName, number)
-                season match {
-                  case Some(Season(_, _, _)) => season.toJson.toString()
-                  case None                  => StatusCodes.NotFound
-                }
-              }
-          }
-        }
       }
+    // TODO: Make this `text/html`
+    //      } ~
+    //      (path("season") & get) {
+    //        respondWithMediaType(`application/json`) {
+    //          parameters("showName", "number".as[Int]) {
+    //            (showName, number) =>
+    //              complete {
+    //                val season = dbHelper.getSeason(showName, number)
+    //                season match {
+    //                  case Some(Season(_, _, _)) => season.toJson.toString()
+    //                  case None                  => StatusCodes.NotFound
+    //                }
+    //              }
+    //          }
+    //        }
+    //      }
   }
 }
