@@ -66,22 +66,28 @@ trait TvShowTrackerService extends HttpService {
               }
           }
         }
+      } ~
+      (path("searchSeason") & get) {
+        respondWithMediaType(`text/html`) {
+          complete {
+            html.searchseason("Search Season").toString()
+          }
+        }
+      } ~
+      // TODO: Make this `text/html`
+      (path("season") & get) {
+        respondWithMediaType(`text/html`) {
+          parameters("showName", "number".as[Int]) {
+            (showName, number) =>
+              complete {
+                val season = dbHelper.getSeason(showName, number)
+                season match {
+                  case Some(Season(_, _, _)) => html.season(showName, season.get).toString()
+                  case None                  => html.notfound(showName, number).toString()
+                }
+              }
+          }
+        }
       }
-    // TODO: Make this `text/html`
-    //      } ~
-    //      (path("season") & get) {
-    //        respondWithMediaType(`application/json`) {
-    //          parameters("showName", "number".as[Int]) {
-    //            (showName, number) =>
-    //              complete {
-    //                val season = dbHelper.getSeason(showName, number)
-    //                season match {
-    //                  case Some(Season(_, _, _)) => season.toJson.toString()
-    //                  case None                  => StatusCodes.NotFound
-    //                }
-    //              }
-    //          }
-    //        }
-    //      }
   }
 }

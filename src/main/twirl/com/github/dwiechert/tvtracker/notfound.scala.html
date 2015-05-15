@@ -1,0 +1,8 @@
+@(searches: Any*)
+
+<h1>The resource requested was not found:</h1>
+<ul>
+@for(search <- searches) {
+	<li>@search</li>
+}
+</ul>
