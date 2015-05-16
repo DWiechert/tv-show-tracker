@@ -33,48 +33,38 @@ trait TvShowTrackerService extends HttpService {
           html.shows(shows).toString
         }
       }
-      // TODO: Make this `text/html`
-      //    } ~
-      //      (path("show") & get) {
-      //        respondWithMediaType(`application/json`) {
-      //          parameters("name") {
-      //            name =>
-      //              complete {
-      //                val show = dbHelper.getShow(name)
-      //                show match {
-      //                  case Some(Show(_)) => show.toJson.toString()
-      //                  case None          => StatusCodes.NotFound
-      //                }
-      //              }
-      //          }
-      //        }
     } ~
-      (path("searchShows") & get) {
+      (path("searchshow") & get) {
         respondWithMediaType(`text/html`) {
           complete {
-            html.searchshows("Search Shows").toString()
+            html.searchshow("Search Shows").toString()
           }
         }
       } ~
-      (path("seasons") & get) {
+      (path("show") & get) {
         respondWithMediaType(`text/html`) {
           parameters("showName") {
             showName =>
               complete {
-                val seasons = dbHelper.getSeasons(showName)
-                html.seasons(showName, seasons).toString()
+                val show = dbHelper.getShow(showName)
+                show match {
+                  case Some(Show(_)) => {
+                    val seasons = dbHelper.getSeasons(showName)
+                    html.show(showName, seasons).toString()
+                  }
+                  case None => html.notfound(showName).toString()
+                }
               }
           }
         }
       } ~
-      (path("searchSeason") & get) {
+      (path("searchseason") & get) {
         respondWithMediaType(`text/html`) {
           complete {
             html.searchseason("Search Season").toString()
           }
         }
       } ~
-      // TODO: Make this `text/html`
       (path("season") & get) {
         respondWithMediaType(`text/html`) {
           parameters("showName", "number".as[Int]) {

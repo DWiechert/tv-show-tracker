@@ -1,7 +1,21 @@
 @(shows: List[Show])
 
+<style>
+.submitLink {
+	background-color: transparent;
+	text-decoration: underline;
+	border: none;
+	color: blue;
+	cursor: pointer;
+}
+</style>
+
 <ul>
 @for(show <- shows) {
-  <li>@show.name</li>
+	<li>
+		<form action="show" method="get">
+			<input type="submit" name="showName" class="submitLink" value="@show.name">
+		</form>
+  </li>
 }
 </ul>
