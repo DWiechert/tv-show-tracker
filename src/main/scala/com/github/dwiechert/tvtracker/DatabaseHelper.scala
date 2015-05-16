@@ -9,7 +9,6 @@ import scala.slick.lifted.AbstractTable
  */
 class DatabaseHelper(val user: String, val password: String) {
   // Define our table query items
-  val users = TableQuery[Users]
   val shows = TableQuery[Shows]
   val seasons = TableQuery[Seasons]
 
@@ -17,30 +16,7 @@ class DatabaseHelper(val user: String, val password: String) {
   val db = Database.forURL("jdbc:postgresql://localhost/tv-show-tracker", driver = "org.postgresql.Driver", user = user, password = password)
   db.withTransaction { implicit session =>
     // Create the tables if they don't already exist
-    createIfNotExists(users, shows, seasons)
-  }
-
-  def insertUsers() = {
-    db.withTransaction { implicit session =>
-      // Insert some users
-      users.insert(
-        User("John Doe")
-      )
-      users.insert(
-        User("Fred Smith")
-      )
-    }
-  }
-
-  def deleteUsers() {
-    db.withTransaction { implicit session =>
-      // Query and delete some users
-      val query = for {
-        u <- users
-        if (u.id < 50)
-      } yield (u)
-      query.delete
-    }
+    createIfNotExists(shows, seasons)
   }
 
   def insertShow() = {
