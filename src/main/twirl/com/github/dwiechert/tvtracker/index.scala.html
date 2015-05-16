@@ -1,0 +1,30 @@
+@(title: String)
+
+<style>
+.submitLink {
+	background-color: transparent;
+	text-decoration: underline;
+	border: none;
+	color: blue;
+	cursor: pointer;
+}
+</style>
+
+<h1>@title</h1>
+<ul>
+	<li>
+		<form action="shows" method="get">
+			<input type="submit" class="submitLink" value="List Shows">
+		</form>
+	</li>
+	<li>
+		<form action="searchshow" method="get">
+			<input type="submit" class="submitLink" value="Search Show">
+		</form>
+	</li>
+	<li>
+		<form action="searchseason" method="get">
+			<input type="submit" class="submitLink" value="Search Season">
+		</form>
+	</li>
+</ul>

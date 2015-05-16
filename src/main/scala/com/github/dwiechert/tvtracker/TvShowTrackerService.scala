@@ -29,6 +29,18 @@ trait TvShowTrackerService extends HttpService {
   dbHelper.insertSeason()
 
   val route: Route = {
+    (path("")) {
+      get {
+        ctx => ctx.redirect("/index", StatusCodes.PermanentRedirect)
+      }
+    } ~
+    (path("index") & get) {
+      respondWithMediaType(`text/html`) {
+        complete {
+          html.index("TV Show Tracker").toString()
+        }
+      }
+    } ~
     (path("shows") & get) {
       respondWithMediaType(`text/html`) {
         complete {
