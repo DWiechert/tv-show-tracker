@@ -4,6 +4,9 @@ import akka.actor.Actor
 import spray.routing._
 import spray.http._
 import MediaTypes._
+import com.github.dwiechert.tvtracker.db.DatabaseHelper
+import com.github.dwiechert.tvtracker.db.Show
+import com.github.dwiechert.tvtracker.db.Season
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor

@@ -1,8 +1,7 @@
-package com.github.dwiechert.tvtracker
+package com.github.dwiechert.tvtracker.db
 
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.jdbc.meta.MTable
-import scala.slick.lifted.AbstractTable
 
 /**
  * Main enterance to using Slick.

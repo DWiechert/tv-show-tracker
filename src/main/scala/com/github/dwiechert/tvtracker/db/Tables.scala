@@ -1,7 +1,7 @@
-package com.github.dwiechert.tvtracker
+package com.github.dwiechert.tvtracker.db
 
 import scala.slick.driver.PostgresDriver.simple._
-import scala.slick.jdbc.JdbcBackend
+import scala.slick.lifted.ProvenShape.proveShapeOf
 
 /**
  * Case class to define a Show.
