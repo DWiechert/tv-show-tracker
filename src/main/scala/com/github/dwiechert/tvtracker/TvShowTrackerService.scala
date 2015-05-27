@@ -25,7 +25,6 @@ class TvShowTrackerActor extends Actor with TvShowTrackerService {
 trait TvShowTrackerService extends HttpService {
   val dbHelper = new DatabaseHelper(user = "tv-show-tracker-role", password = "tracker")
 
-  dbHelper.insertShow()
   dbHelper.insertSeason()
 
   val route: Route = {
@@ -93,6 +92,24 @@ trait TvShowTrackerService extends HttpService {
               }
           }
         }
+      } ~
+      (path("addshow") & post) {
+        respondWithMediaType(`text/html`) {
+          // TODO: This needs to accept a JSON Show
+          entity(as[String]) {
+            showName =>
+              complete {
+                val show = Show(showName)
+                dbHelper.insertShow(show)
+                html.addshow(show).toString()
+              }
+          }
+        }
       }
+      
+      
+//      get {
+//        ctx => ctx.redirect("/index", StatusCodes.PermanentRedirect)
+//      }
   }
 }

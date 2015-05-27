@@ -18,11 +18,9 @@ class DatabaseHelper(val user: String, val password: String) {
     createIfNotExists(shows, seasons)
   }
 
-  def insertShow() = {
+  def insertShow(show: Show) = {
     db.withTransaction { implicit session =>
-      // Insert some shows
-      insertIfNotExists(Show("Oz"))
-      insertIfNotExists(Show("Breaking Bad"))
+      insertIfNotExists(show)
     }
   }
 

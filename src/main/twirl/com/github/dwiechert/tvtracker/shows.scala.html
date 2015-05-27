@@ -10,6 +10,13 @@
 }
 </style>
 
+<h3>Add Show</h3>
+<form action="addshow" method="post">
+	Show Name: <input type="text" name="showName"><br>
+	<input type="submit" value="Submit">
+</form>
+
+<h3>All Shows</h3>
 <ul>
 @for(show <- shows) {
 	<li>
