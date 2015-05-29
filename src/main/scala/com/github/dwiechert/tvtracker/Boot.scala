@@ -16,5 +16,5 @@ object Boot extends App {
 
   implicit val timeout = Timeout(5.seconds)
   // start a new HTTP server on port 5000 with our service actor as the handler
-  IO(Http) ? Http.Bind(service, interface = "localhost", port = System.getenv("PORT").toInt)
+  IO(Http) ? Http.Bind(service, interface = "https://tv-show-tracker.herokuapp.com/", port = System.getenv("PORT").toInt)
 }
