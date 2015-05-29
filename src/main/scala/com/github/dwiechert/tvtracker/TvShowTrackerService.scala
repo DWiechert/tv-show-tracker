@@ -27,6 +27,8 @@ class TvShowTrackerActor extends Actor with TvShowTrackerService {
 trait TvShowTrackerService extends HttpService {
   val dbHelper = new DatabaseHelper()
 
+  dbHelper.insertShow(Show("Oz"))
+  dbHelper.insertShow(Show("Breaking Bad"))
   dbHelper.insertSeason()
 
   val route: Route = {
