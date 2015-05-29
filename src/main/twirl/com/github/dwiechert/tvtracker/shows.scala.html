@@ -25,7 +25,7 @@ function getFormData($form){
 
 function addshow() {
 	var form = $(document.addshowForm);
-	var data = "{ \"name\": \"Avatar: The Last Airbender\" }";
+	var data = "{ \"name\": \"The Legend of Korra\" }";
 	// This needs to point to a "real" domain because it isn't allowed to hit localhost
 	// Curl works though - curl -v -X PUT localhost:8080/addshow -H "Content-Type: application/json" -d "{ \"name\": \"Avatar: The Last Airbender\" }"
 	$.ajax({
@@ -33,7 +33,9 @@ function addshow() {
 		  url: "/addshow",
 		  data: data,
 		  success: function(){},
-		  contentType : "application/json"
+		  contentType : "application/json",
+		  success: function() {
+			  location.reload();
 		});
 }
 </script>
