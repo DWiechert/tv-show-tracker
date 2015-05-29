@@ -30,7 +30,7 @@ function addshow() {
 	// Curl works though - curl -v -X PUT localhost:8080/addshow -H "Content-Type: application/json" -d "{ \"name\": \"Avatar: The Last Airbender\" }"
 	$.ajax({
 		  type: "PUT",
-		  url: "http://localhost:8080/addshow",
+		  url: "https://tv-show-tracker.herokuapp.com/addshow",
 		  data: data,
 		  success: function(){},
 		  dataType: "json",

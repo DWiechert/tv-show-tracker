@@ -16,7 +16,6 @@ object Boot extends App {
   val service = system.actorOf(Props[TvShowTrackerActor], "tv-show-tracker")
 
   implicit val timeout = Timeout(5.seconds)
-  // start a new HTTP server on port 5000 with our service actor as the handler
-  val myPort = Properties.envOrElse("PORT", "8080").toInt // for Heroku compatibility
+  val myPort = Properties.envOrElse("PORT", "8080").toInt // For Heroku compatibility
   IO(Http) ? Http.Bind(service, interface = "0.0.0.0", port = myPort)
 }
