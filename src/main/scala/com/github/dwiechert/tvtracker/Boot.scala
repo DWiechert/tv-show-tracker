@@ -6,6 +6,7 @@ import spray.can.Http
 import akka.pattern.ask
 import akka.util.Timeout
 import scala.concurrent.duration._
+import util.Properties
 
 object Boot extends App {
   // we need an ActorSystem to host our application in
@@ -16,5 +17,6 @@ object Boot extends App {
 
   implicit val timeout = Timeout(5.seconds)
   // start a new HTTP server on port 5000 with our service actor as the handler
-  IO(Http) ? Http.Bind(service, interface = "https://tv-show-tracker.herokuapp.com/", port = System.getenv("PORT").toInt)
+  val myPort = Properties.envOrElse("PORT", "8080").toInt // for Heroku compatibility
+  IO(Http) ? Http.Bind(service, interface = "0.0.0.0", port = myPort)
 }
