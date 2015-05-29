@@ -3,6 +3,7 @@ package com.github.dwiechert.tvtracker
 import akka.actor.Actor
 import spray.routing._
 import spray.http._
+import spray.http.StatusCodes._
 import spray.httpx.SprayJsonSupport._
 import MediaTypes._
 import com.github.dwiechert.tvtracker.db.DatabaseHelper
@@ -98,12 +99,12 @@ trait TvShowTrackerService extends HttpService {
         }
       } ~
       (path("addshow") & put) {
-        respondWithMediaType(`text/html`) {
+          respondWithStatus(Created) {
           entity(as[Show]) {
             show =>
               complete {
                 dbHelper.insertShow(show)
-                html.addshow(show).toString()
+                OK
               }
           }
         }
