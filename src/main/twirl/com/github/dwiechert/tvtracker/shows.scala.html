@@ -1,3 +1,5 @@
+@(shows: List[Show])
+
 <style>
 .submitLink {
 	background-color: transparent;
@@ -45,3 +47,12 @@ function addshow() {
 </form>
 
 <h3>All Shows</h3>
+<ul>
+@for(show <- shows) {
+	<li>
+		<form action="show" method="get">
+			<input type="submit" name="showName" class="submitLink" value="@show.name">
+		</form>
+  </li>
+}
+</ul>
