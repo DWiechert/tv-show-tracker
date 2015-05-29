@@ -1,3 +1,7 @@
+import NativePackagerKeys._
+
+packageArchetype.java_application
+
 name := "tv-show-tracker"
 
 version := "0.1"
