@@ -2,17 +2,21 @@ package com.github.dwiechert.tvtracker.db
 
 import scala.slick.driver.PostgresDriver.simple._
 import scala.slick.jdbc.meta.MTable
+import java.net.URI
 
 /**
  * Main enterance to using Slick.
  */
-class DatabaseHelper(val user: String, val password: String) {
+class DatabaseHelper() {
   // Define our table query items
   val shows = TableQuery[Shows]
   val seasons = TableQuery[Seasons]
 
   // Connect to local PostgreSQL database
-  val db = Database.forURL("jdbc:postgresql://localhost/tv-show-tracker", driver = "org.postgresql.Driver", user = user, password = password)
+  val dbUri = new URI(System.getenv("DATABASE_URL"))
+  val username = dbUri.getUserInfo.split(":")(0)
+  val password = dbUri.getUserInfo.split(":")(1)
+  val db = Database.forURL(s"jdbc:postgresql://${dbUri.getHost}:${dbUri.getPort}${dbUri.getPath}", driver = "org.postgresql.Driver", user = username, password = password)
   db.withTransaction { implicit session =>
     // Create the tables if they don't already exist
     createIfNotExists(shows, seasons)
@@ -78,7 +82,7 @@ class DatabaseHelper(val user: String, val password: String) {
         season <- seasons
         if (show.name === season.showName)
       } yield (show, season)).list
-      
+
       joinedList.groupBy(_._1).mapValues(_.map(_._2))
     }
   }

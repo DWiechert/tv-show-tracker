@@ -25,7 +25,7 @@ class TvShowTrackerActor extends Actor with TvShowTrackerService {
 
 // this trait defines our service behavior independently from the service actor
 trait TvShowTrackerService extends HttpService {
-  val dbHelper = new DatabaseHelper(user = "tv-show-tracker-role", password = "tracker")
+  val dbHelper = new DatabaseHelper()
 
   dbHelper.insertSeason()
 
