@@ -3,10 +3,12 @@ package com.github.dwiechert.tvtracker
 import akka.actor.Actor
 import spray.routing._
 import spray.http._
+import spray.httpx.SprayJsonSupport._
 import MediaTypes._
 import com.github.dwiechert.tvtracker.db.DatabaseHelper
 import com.github.dwiechert.tvtracker.db.Show
 import com.github.dwiechert.tvtracker.db.Season
+import com.github.dwiechert.tvtracker.db.MyJsonProtocol._
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
@@ -33,21 +35,21 @@ trait TvShowTrackerService extends HttpService {
         ctx => ctx.redirect("/index", StatusCodes.PermanentRedirect)
       }
     } ~
-    (path("index") & get) {
-      respondWithMediaType(`text/html`) {
-        complete {
-          html.index("TV Show Tracker").toString()
+      (path("index") & get) {
+        respondWithMediaType(`text/html`) {
+          complete {
+            html.index("TV Show Tracker").toString()
+          }
         }
-      }
-    } ~
-    (path("shows") & get) {
-      respondWithMediaType(`text/html`) {
-        complete {
-          val shows = dbHelper.getShows
-          html.shows(shows).toString
+      } ~
+      (path("shows") & get) {
+        respondWithMediaType(`text/html`) {
+          complete {
+            val shows = dbHelper.getShows
+            html.shows(shows).toString
+          }
         }
-      }
-    } ~
+      } ~
       (path("searchshow") & get) {
         respondWithMediaType(`text/html`) {
           complete {
@@ -93,23 +95,16 @@ trait TvShowTrackerService extends HttpService {
           }
         }
       } ~
-      (path("addshow") & post) {
+      (path("addshow") & put) {
         respondWithMediaType(`text/html`) {
-          // TODO: This needs to accept a JSON Show
-          entity(as[String]) {
-            showName =>
+          entity(as[Show]) {
+            show =>
               complete {
-                val show = Show(showName)
                 dbHelper.insertShow(show)
                 html.addshow(show).toString()
               }
           }
         }
       }
-      
-      
-//      get {
-//        ctx => ctx.redirect("/index", StatusCodes.PermanentRedirect)
-//      }
   }
 }
