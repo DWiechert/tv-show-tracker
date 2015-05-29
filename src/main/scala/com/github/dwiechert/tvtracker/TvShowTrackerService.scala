@@ -9,7 +9,6 @@ import com.github.dwiechert.tvtracker.db.DatabaseHelper
 import com.github.dwiechert.tvtracker.db.Show
 import com.github.dwiechert.tvtracker.db.Season
 import com.github.dwiechert.tvtracker.db.MyJsonProtocol._
-import spray.http.HttpHeaders.RawHeader
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
@@ -99,15 +98,13 @@ trait TvShowTrackerService extends HttpService {
         }
       } ~
       (path("addshow") & put) {
-        respondWithHeader(RawHeader("Access-Control-Allow-Origin", "*")) {
-          respondWithMediaType(`text/html`) {
-            entity(as[Show]) {
-              show =>
-                complete {
-                  dbHelper.insertShow(show)
-                  html.addshow(show).toString()
-                }
-            }
+        respondWithMediaType(`text/html`) {
+          entity(as[Show]) {
+            show =>
+              complete {
+                dbHelper.insertShow(show)
+                html.addshow(show).toString()
+              }
           }
         }
       }
