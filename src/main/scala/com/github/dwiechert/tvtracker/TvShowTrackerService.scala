@@ -97,15 +97,20 @@ trait TvShowTrackerService extends HttpService {
           }
         }
       } ~
-      (path("addshow") & put) {
+      (path("addshow") & get) {
         respondWithMediaType(`text/html`) {
-          entity(as[Show]) {
-            show =>
-              complete {
-                dbHelper.insertShow(show)
-                html.addshow(show).toString()
-              }
+          complete {
+            html.addshow("Add Show").toString()
           }
+        }
+      } ~
+      (path("addshow") & put) {
+        entity(as[Show]) {
+          show =>
+            complete {
+              dbHelper.insertShow(show)
+              StatusCodes.OK
+            }
         }
       }
   }

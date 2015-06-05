@@ -10,40 +10,8 @@
 }
 </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script type="text/javascript">
-function getFormData($form){
-    var unindexed_array = $form.serializeArray();
-    var indexed_array = {};
-
-    $.map(unindexed_array, function(n, i){
-        indexed_array[n['name']] = n['value'];
-    });
-
-    return indexed_array;
-}
-
-function addshow() {
-	var form = $(document.addshowForm);
-	var data = JSON.stringify(getFormData(form));
-	$.ajax({
-		  type: "PUT",
-		  url: "/addshow",
-		  data: data,
-		  success: function(){},
-		  contentType : "application/json",
-		  success: function() {
-			  location.reload();
-		  }
-		});
-}
-</script>
-
-<h3>Add Show</h3>
-<!-- http://stackoverflow.com/questions/22195065/how-to-send-a-json-object-using-html-form-data -->
-<form name="addshowForm" action="javascript:addshow()">
-	Show Name: <input type="text" name="name"><br>
-	<input type="submit" value="Submit">
+<form action="addshow" method="get">
+	<input type="submit" class="submitLink" value="Add Show">
 </form>
 
 <h3>All Shows</h3>
