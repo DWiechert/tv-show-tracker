@@ -27,90 +27,90 @@ class TvShowTrackerActor extends Actor with TvShowTrackerService {
 trait TvShowTrackerService extends HttpService {
   val dbHelper = new DatabaseHelper()
 
-  dbHelper.insertShow(Show("Oz"))
-  dbHelper.insertShow(Show("Breaking Bad"))
-  dbHelper.insertSeason()
-
   val route: Route = {
     (path("")) {
       get {
         ctx => ctx.redirect("/index", StatusCodes.PermanentRedirect)
       }
     } ~
-      (path("index") & get) {
-        respondWithMediaType(`text/html`) {
-          complete {
-            html.index("TV Show Tracker").toString()
-          }
-        }
-      } ~
-      (path("shows") & get) {
-        respondWithMediaType(`text/html`) {
-          complete {
-            val shows = dbHelper.getShows
-            html.shows(shows).toString
-          }
-        }
-      } ~
-      (path("searchshow") & get) {
-        respondWithMediaType(`text/html`) {
-          complete {
-            html.searchshow("Search Shows").toString()
-          }
-        }
-      } ~
-      (path("show") & get) {
-        respondWithMediaType(`text/html`) {
-          parameters("showName") {
-            showName =>
-              complete {
-                val show = dbHelper.getShow(showName)
-                show match {
-                  case Some(Show(_)) => {
-                    val seasons = dbHelper.getSeasons(showName)
-                    html.show(showName, seasons).toString()
-                  }
-                  case None => html.notfound(showName).toString()
-                }
-              }
-          }
-        }
-      } ~
-      (path("searchseason") & get) {
-        respondWithMediaType(`text/html`) {
-          complete {
-            html.searchseason("Search Season").toString()
-          }
-        }
-      } ~
-      (path("season") & get) {
-        respondWithMediaType(`text/html`) {
-          parameters("showName", "number".as[Int]) {
-            (showName, number) =>
-              complete {
-                val season = dbHelper.getSeason(showName, number)
-                season match {
-                  case Some(Season(_, _, _)) => html.season(showName, season.get).toString()
-                  case None                  => html.notfound(showName, number).toString()
-                }
-              }
-          }
-        }
-      } ~
-      (path("addshow") & get) {
-        respondWithMediaType(`text/html`) {
-          complete {
-            html.addshow("Add Show").toString()
-          }
-        }
-      } ~
-      (path("addshow") & put) {
-        entity(as[Show]) {
-          show =>
+      get {
+        path("index") {
+          respondWithMediaType(`text/html`) {
             complete {
-              dbHelper.insertShow(show)
-              StatusCodes.OK
+              html.index("TV Show Tracker").toString()
             }
+          }
+        } ~
+          path("shows") {
+            respondWithMediaType(`text/html`) {
+              complete {
+                val shows = dbHelper.getShows
+                html.shows(shows).toString
+              }
+            }
+          } ~
+          path("searchshow") {
+            respondWithMediaType(`text/html`) {
+              complete {
+                html.searchshow("Search Shows").toString()
+              }
+            }
+          } ~
+          path("show") {
+            respondWithMediaType(`text/html`) {
+              parameters("showName") {
+                showName =>
+                  complete {
+                    val show = dbHelper.getShow(showName)
+                    show match {
+                      case Some(Show(_)) => {
+                        val seasons = dbHelper.getSeasons(showName)
+                        html.show(showName, seasons).toString()
+                      }
+                      case None => html.notfound(showName).toString()
+                    }
+                  }
+              }
+            }
+          } ~
+          path("searchseason") {
+            respondWithMediaType(`text/html`) {
+              complete {
+                html.searchseason("Search Season").toString()
+              }
+            }
+          } ~
+          path("season") {
+            respondWithMediaType(`text/html`) {
+              parameters("showName", "number".as[Int]) {
+                (showName, number) =>
+                  complete {
+                    val season = dbHelper.getSeason(showName, number)
+                    season match {
+                      case Some(Season(_, _, _)) => html.season(showName, season.get).toString()
+                      case None                  => html.notfound(showName, number).toString()
+                    }
+                  }
+              }
+            }
+          } ~
+          path("addshow") {
+            respondWithMediaType(`text/html`) {
+              complete {
+                html.addshow("Add Show").toString()
+              }
+            }
+          }
+      } ~
+      put {
+        path("addshow") {
+          entity(as[Show]) {
+            show =>
+              complete {
+                dbHelper.insertShow(show)
+                StatusCodes.OK
+              }
+          }
         }
       }
   }
