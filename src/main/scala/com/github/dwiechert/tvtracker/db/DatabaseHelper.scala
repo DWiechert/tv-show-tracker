@@ -65,12 +65,9 @@ class DatabaseHelper() {
     }
   }
 
-  def insertSeason() = {
+  def insertSeason(season: Season) = {
     db.withTransaction { implicit session =>
-      // Insert some seasons
-      insertIfNotExists(Season(1, "Oz"))
-      insertIfNotExists(Season(2, "Oz"))
-      insertIfNotExists(Season(1, "Breaking Bad"))
+      insertIfNotExists(season)
     }
   }
 
