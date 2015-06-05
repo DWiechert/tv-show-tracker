@@ -37,55 +37,55 @@ trait TvShowTrackerService extends HttpService {
             complete {
               html.index("TV Show Tracker").toString()
             }
-          }
-        } ~
-        path("shows") {
-          complete {
-            val shows = dbHelper.getShows
-            html.shows(shows).toString
-          }
-        } ~
-        path("searchshow") {
-          complete {
-            html.searchshow("Search Shows").toString()
-          }
-        } ~
-        path("show") {
-          parameters("showName") {
-            showName =>
+          } ~
+            path("shows") {
               complete {
-                val show = dbHelper.getShow(showName)
-                show match {
-                  case Some(Show(_)) => {
-                    val seasons = dbHelper.getSeasons(showName)
-                    html.show(showName, seasons).toString()
+                val shows = dbHelper.getShows
+                html.shows(shows).toString
+              }
+            } ~
+            path("searchshow") {
+              complete {
+                html.searchshow("Search Shows").toString()
+              }
+            } ~
+            path("show") {
+              parameters("showName") {
+                showName =>
+                  complete {
+                    val show = dbHelper.getShow(showName)
+                    show match {
+                      case Some(Show(_)) => {
+                        val seasons = dbHelper.getSeasons(showName)
+                        html.show(showName, seasons).toString()
+                      }
+                      case None => html.notfound(showName).toString()
+                    }
                   }
-                  case None => html.notfound(showName).toString()
-                }
               }
-          }
-        } ~
-        path("searchseason") {
-          complete {
-            html.searchseason("Search Season").toString()
-          }
-        } ~
-        path("season") {
-          parameters("showName", "number".as[Int]) {
-            (showName, number) =>
+            } ~
+            path("searchseason") {
               complete {
-                val season = dbHelper.getSeason(showName, number)
-                season match {
-                  case Some(Season(_, _, _)) => html.season(showName, season.get).toString()
-                  case None                  => html.notfound(showName, number).toString()
-                }
+                html.searchseason("Search Season").toString()
               }
-          }
-        } ~
-        path("addshow") {
-          complete {
-            html.addshow("Add Show").toString()
-          }
+            } ~
+            path("season") {
+              parameters("showName", "number".as[Int]) {
+                (showName, number) =>
+                  complete {
+                    val season = dbHelper.getSeason(showName, number)
+                    season match {
+                      case Some(Season(_, _, _)) => html.season(showName, season.get).toString()
+                      case None                  => html.notfound(showName, number).toString()
+                    }
+                  }
+              }
+            } ~
+            path("addshow") {
+              complete {
+                html.addshow("Add Show").toString()
+              }
+            }
         }
     } ~
       put {
